@@ -1,47 +1,63 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import iro from "@jaames/iro";
+  import { onMount } from "svelte";
+
+  let color: string = "#000000";
+
+  let colorPicker: iro.ColorPicker;
+  onMount(() => {
+    colorPicker = iro.ColorPicker("#picker", {
+      color,
+      width: 400,
+      borderWidth: 1,
+      layout: [
+        {
+          component: iro.ui.Box,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: "hue",
+          },
+        },
+      ],
+    });
+
+    colorPicker.on("color:change", (nextColor: iro.Color) => {
+      color = nextColor.hexString;
+    });
+  });
+
+  function copy() {
+    navigator.clipboard.writeText(color);
+  }
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
+  <div id="picker"></div>
+  <div id="select">
+    <label for="color">Selected Color</label>
+    <div id="color" style="background-color: {color};">
+      <h1>{color}</h1>
+    </div>
   </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  #select {
+    margin-top: 1em;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+
+  #color {
+    width: 400px;
+    border: 1px;
+    border: solid;
+    border-color: white;
+    border-radius: 14px;
+    border-width: 1px;
+    text-align: center;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    font-family: "Roboto Mono", "Courier New", Courier, monospace;
   }
 </style>
