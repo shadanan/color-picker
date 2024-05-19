@@ -9,10 +9,14 @@
   let copying = false;
 
   let colorPicker: iro.ColorPicker;
+
+  function updateWidth(colorPicker: iro.ColorPicker) {
+    colorPicker.setOptions({ width: Math.min(window.innerWidth - 16, 500) });
+  }
+
   onMount(() => {
     colorPicker = iro.ColorPicker("#picker", {
       color: color.hexString,
-      width: 400,
       borderWidth: 1,
       layout: [
         {
@@ -26,10 +30,13 @@
         },
       ],
     });
+    updateWidth(colorPicker);
 
     colorPicker.on("color:change", (nextColor: iro.Color) => {
       color = nextColor;
     });
+
+    window.onresize = () => updateWidth(colorPicker);
   });
 
   function copy() {
@@ -58,7 +65,7 @@
 
 <style>
   button {
-    width: 400px;
+    width: 100%;
     border: 1px;
     border: solid;
     border-color: white;
